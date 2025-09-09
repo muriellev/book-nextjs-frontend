@@ -1,0 +1,24 @@
+# schema: ${SCHEMA_URL:http://localhost:8080/graphql}
+# documents:
+#   - "app/**/*.{ts,tsx}"
+#   - "lib/**/*.{ts,tsx,graphql}"
+# generates:
+#   ./lib/__generated__/:
+#     preset: client
+#     presetConfig:
+#       gqlTagName: graphql
+
+schema: ${SCHEMA_URL:http://localhost:8080/graphql}
+documents:
+  - "src/app/**/*.{ts,tsx}"
+  - "src/lib/**/*.{ts,tsx,graphql}"
+generates:
+  ./src/lib/__generated__/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typed-document-node
+    config:
+      avoidOptionals: true
+      scalars:
+        DateTime: string
