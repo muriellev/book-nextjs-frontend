@@ -27,3 +27,20 @@ export const HOMEPAGE_POSTS = gql`
     }
   }
 `;
+
+export const HOMEPAGE_BOOKS = gql`
+  query HomeBooks {
+    books(first: 100, where: { status: PUBLISH }) {
+      nodes { slug title date excerpt }
+    }
+  }
+`;
+
+export const BOOK_BY_SLUG = gql`
+  query BookBySlug($slug: ID!) {
+    book(id: $slug, idType: SLUG) {
+      title
+      content
+    }
+  }
+`;
