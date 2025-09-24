@@ -32,11 +32,11 @@ export default async function BooksPage() {
   const data = await wpFetch<BooksData>(QUERY, { first: 24 });
 
   return (
-    <main className="container mx-auto p-6">
+    <main className="main-container container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold mb-6">Books</h1>
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {data.books.nodes.map((b) => (
-          <li key={b.id} className="bg-red-100 text-black rounded shadow p-4">
+          <li key={b.id} className="text-black rounded shadow p-4">
             <Link href={`/books/${b.slug}`} className="block hover:opacity-90">
               {b.featuredImage?.node?.sourceUrl && (
                 <Image
