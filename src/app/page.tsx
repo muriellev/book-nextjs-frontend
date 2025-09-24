@@ -12,7 +12,7 @@ export default async function HomePage() {
   const posts = data?.posts?.nodes ?? [];
 
   return (
-    <main className="prose mx-auto p-6">
+    <main className="main-container prose mx-auto p-6">
       <h1>Blog</h1>
       <ul>
         {posts.map((p: any) => (

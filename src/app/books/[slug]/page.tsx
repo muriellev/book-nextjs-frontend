@@ -39,14 +39,14 @@ export default async function BookPage({ params }: { params: { slug: string } })
   if (!b) return <div className="p-6">Not found.</div>;
 
   return (
-    <main className="container mx-auto p-6">
+    <main className="main-container container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-4">{b.title}</h1>
 
       {b.featuredImage?.node?.sourceUrl && (
         <Image
           src={b.featuredImage.node.sourceUrl}
           alt={b.featuredImage.node.altText || b.title}
-          width={1000}
+          width={300}
           height={600}
           className="rounded mb-6"
         />
