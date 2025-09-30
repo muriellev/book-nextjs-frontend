@@ -5,8 +5,7 @@ export async function POST(req: NextRequest) {
   // const secret = req.nextUrl.searchParams.get("secret");
   const form = await req.formData();
   const secret = form.get("secret");
-  console.log('secret');
-  console.log(secret);
+
   if (secret !== process.env.REVALIDATE_SECRET)
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
 
@@ -25,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   } catch (e) {
     // If using Next 14/15: revalidatePath is available in Server Actions; fallback approach:
-    console.error("Revalidate error:", e);
+    //console.error("Revalidate error:", e);
     return NextResponse.json({ ok: false, error: String(e) });
   }
 
