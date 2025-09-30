@@ -10,22 +10,37 @@ type BooksData = {
       title: string;
       excerpt?: string;
       featuredImage?: { node: { sourceUrl: string; altText: string } } | null;
+      genres?: { nodes: Array<{ name: string; slug: string }> } | null;
     }>;
   };
 };
 
 const QUERY = /* GraphQL */ `
-  query BooksList($first: Int!) {
-    books(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
-      nodes {
-        id
-        slug
-        title
-        excerpt
-        featuredImage { node { sourceUrl altText } }
+query BooksList($first: Int!) {
+  books(
+    first: $first
+    where: {orderby: {field: DATE, order: DESC}}
+  ) {
+    nodes {
+      id
+      slug
+      title
+      excerpt
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
+      genres {
+        nodes {
+          slug
+          name
+        }
       }
     }
   }
+}
 `;
 
 export default async function BooksPage() {
@@ -36,7 +51,7 @@ export default async function BooksPage() {
       <h1 className="text-3xl font-bold mb-6">Books</h1>
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {data.books.nodes.map((b) => (
-          <li key={b.id} className="text-black rounded shadow p-4">
+          <li key={b.id} className="text-black rounded shadow p-4 relative book-card">
             <Link href={`/books/${b.slug}`} className="block hover:opacity-90">
               {b.featuredImage?.node?.sourceUrl && (
                 <Image
@@ -54,6 +69,11 @@ export default async function BooksPage() {
                   dangerouslySetInnerHTML={{ __html: b.excerpt }}
                 />
               )}
+              <div className="text-sm text-slate-500 absolute bottom-0 left-0 right-0 p-4">
+                {b.genres?.nodes?.length ? (
+                <>Genres: {b.genres.nodes.map((g) => g.name).join(", ")}</>
+                ) : null}
+            </div>
             </Link>
           </li>
         ))}

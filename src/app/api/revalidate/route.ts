@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
 
   } catch (e) {
     // If using Next 14/15: revalidatePath is available in Server Actions; fallback approach:
+    console.error("Revalidate error:", e);
+    return NextResponse.json({ ok: false, error: String(e) });
   }
 
   return NextResponse.json({ revalidated: true, slug: slug ?? null });
