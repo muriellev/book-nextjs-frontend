@@ -1,30 +1,37 @@
-import { getClient } from "@/lib/apollo";
-import { ALL_POST_SLUGS, POST_BY_SLUG } from "@/lib/queries";
-import { AllPostSlugsQuery } from "@/lib/__generated__/graphql";
-import { notFound } from "next/navigation";
+import { wpFetch } from "@/lib/wp";
 
-export const revalidate = 60;
+type PostData = {
+  post: {
+    title: string;
+    content?: string;
+    featuredImage?: { node: { sourceUrl: string; altText: string } } | null;
+    genres?: { nodes: Array<{ name: string; slug: string }> } | null;
+    // example meta if you registered it with show_in_rest + graphql:
+    authorName?: string; // you can expose via WPGraphQL Meta or ACF
+  } | null;
+};
 
-export async function generateStaticParams() {
-  const client = getClient();
-  //const { data } = await client.query({ query: ALL_POST_SLUGS });
-  const { data } = await client.query<AllPostSlugsQuery>({ query: ALL_POST_SLUGS });
-  return (data?.posts?.nodes ?? []).map((n: any) => ({ slug: n.slug }));
-}
+export const POST_BY_SLUG = `
+  query PostBySlug($slug: ID!, $asPreview: Boolean = false) {
+    post(id: $slug, idType: SLUG, asPreview: $asPreview) {
+      title
+      content
+      date
+      featuredImage { node { sourceUrl altText } }
+      #seo: seo { title metaDesc } # if using Yoast + WPGraphQL SEO
+    }
+  }
+`;
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const client = getClient();
-  const { data } = await client.query({
-    query: POST_BY_SLUG,
-    variables: { slug: params.slug },
-  });
-  const post = data?.post;
-  if (!post) return notFound();
+  const data = await wpFetch<PostData>(POST_BY_SLUG, { slug: params.slug });
+  const b = data.post;
+  if (!b) return <div className="p-6">Not found.</div>;
 
   return (
-    <article className="prose mx-auto p-6">
-      <h1>{post.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    <article className="main-container container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <h1>{b.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: b.content ?? "" }} />
     </article>
   );
 }

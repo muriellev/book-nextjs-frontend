@@ -25,14 +25,6 @@ const BOOK_QUERY = /* GraphQL */ `
   }
 `;
 
-export async function generateStaticParams() {
-  // Optional: prebuild slugs for full SSG. Safe to skip and use on-demand ISR.
-  const data = await wpFetch<{ books: { nodes: { slug: string }[] } }>(`
-    { books(first: 100) { nodes { slug } } }
-  `);
-  return data.books.nodes.map(({ slug }) => ({ slug }));
-}
-
 export default async function BookPage({ params }: { params: { slug: string } }) {
   const data = await wpFetch<BookData>(BOOK_QUERY, { slug: params.slug });
   const b = data.book;

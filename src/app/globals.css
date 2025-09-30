@@ -34,3 +34,11 @@ body {
 .main-container {
   padding-top: 30px;
 }
+
+.featured-books {
+  padding-top: 40px;
+}
+
+.book-card {
+  padding-bottom: 70px;
+}
