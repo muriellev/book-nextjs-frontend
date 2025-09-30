@@ -3,7 +3,7 @@ import fetch from "cross-fetch";
 
 const uri = process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_ENDPOINT;
 
-console.log('NEXT_PUBLIC_WORDPRESS_GRAPHQL_ENDPOINT: ' + uri);
+//console.log('NEXT_PUBLIC_WORDPRESS_GRAPHQL_ENDPOINT: ' + uri);
 
 if (!uri || !/^https?:\/\//.test(uri)) {
   throw new Error(
